@@ -19,7 +19,7 @@ if (existsSync(envFile)) {
 const app = express()
 app.use(express.json({ limit: '6mb' }))
 app.post('/api/analyse', handler)
-app.get('/api/health', (_req, res) => res.json({ ok: true, ai: !!process.env.ANTHROPIC_API_KEY }))
+app.get('/api/health', (_req, res) => res.json({ ok: true, ai: !!process.env.ANTHROPIC_API_KEY, accounts: !!(process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL) }))
 
 const dist = path.join(here, 'dist')
 if (existsSync(dist)) {

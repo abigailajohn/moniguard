@@ -9,6 +9,8 @@ const cases = [
   ['sms', 'high'],
   ['real', 'safe'],
   ['new', 'inconclusive'],
+  ['fr', 'high'],
+  ['mcr', 'high'],
 ]
 for (const [id, expected] of cases) {
   const s = SAMPLES.find((x) => x.id === id)
@@ -44,5 +46,14 @@ const qr = analyseRules('http://mcb-payments.top/parking?zone=PL-04', { trusted,
 console.log('qr sticker ->', qr.label, qr.kind)
 assert.equal(qr.kind, 'qr')
 assert.equal(qr.label, 'high')
+
+const legitInvoice = analyseRules('From: accounts@pltraders.mu\nInvoice 2210 for Rs 12,000. Bank details: MCB 000111222333 (unchanged).', { trusted })
+console.log('legit invoice listing bank details ->', legitInvoice.label)
+assert.equal(legitInvoice.label, 'safe', 'listing bank details on a normal invoice should not count as a credential request')
+
+const frResult = analyseRules(SAMPLES.find((x) => x.id === 'fr').text, { trusted, lang: 'fr' })
+assert.ok(/imite/.test(frResult.findings[0].title), 'French wording expected')
+const mcrResult = analyseRules(SAMPLES.find((x) => x.id === 'mcr').text, { trusted, lang: 'mcr' })
+assert.ok(mcrResult.findings.some((f) => f.id === 'bank'), 'Kreol changed bank account should be caught')
 
 console.log('\nAll engine checks passed.')

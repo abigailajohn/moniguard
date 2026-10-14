@@ -59,31 +59,31 @@ async function pdfText(buf) {
   }
 }
 
-const userError = (msg) => Object.assign(new Error(msg), { user: true })
+const userError = (code) => Object.assign(new Error(code), { user: true, code: 'err.file.' + code })
 
 // Returns { name, kind: 'image'|'pdf'|'text', text, file?: {mediaType, data}, thumb? }
 export async function prepareFile(file) {
   const name = file.name || 'file'
   const isText = file.type.startsWith('text/') || /\.(txt|eml)$/i.test(name)
   if (isText) {
-    if (file.size > 200 * 1024) throw userError('That text file is too large.')
+    if (file.size > 200 * 1024) throw userError('tooLarge')
     const text = (await file.text()).slice(0, 5000)
-    if (!text.trim()) throw userError('That file is empty.')
+    if (!text.trim()) throw userError('empty')
     return { name, kind: 'text', text }
   }
   if (file.type === 'application/pdf' || /\.pdf$/i.test(name)) {
-    if (file.size > MAX_FILE) throw userError('That PDF is too large. Keep it under 3 MB.')
+    if (file.size > MAX_FILE) throw userError('pdfTooLarge')
     const buf = await file.arrayBuffer()
     const text = await pdfText(buf.slice(0))
     return { name, kind: 'pdf', text, file: { mediaType: 'application/pdf', data: toB64(buf) } }
   }
   if (file.type.startsWith('image/')) {
-    if (file.size > MAX_IMAGE_IN) throw userError('That image is too large.')
+    if (file.size > MAX_IMAGE_IN) throw userError('imgTooLarge')
     let img
-    try { img = await loadImage(file) } catch { throw userError('We could not open that image. Try a PNG or JPG.') }
+    try { img = await loadImage(file) } catch { throw userError('imgOpen') }
     const big = drawScaled(img, 1568).toDataURL('image/jpeg', 0.85)
     const thumb = drawScaled(img, 160).toDataURL('image/jpeg', 0.7)
     return { name, kind: 'image', text: '', file: { mediaType: 'image/jpeg', data: big.split(',')[1] }, thumb }
   }
-  throw userError('That file type is not supported. Use a screenshot, photo, PDF or .txt file.')
+  throw userError('unsupported')
 }

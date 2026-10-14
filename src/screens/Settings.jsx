@@ -1,12 +1,15 @@
+import { useState } from 'react'
 import Icon from '../icons.jsx'
+import { LANGS, useT } from '../i18n.js'
 import { who } from '../store.js'
 
-function Row({ icon, title, sub, onClick, isNew }) {
+function Row({ icon, title, sub, onClick, isNew, danger }) {
+  const { t } = useT()
   return (
     <button className="row" onClick={onClick}>
-      <span className="ico"><Icon name={icon} size={20} color="var(--p)" /></span>
-      <span className="flex1"><div className="ttl">{title}{isNew && <span className="new">New</span>}</div>{sub && <div className="t" style={{ fontSize: 11 }}>{sub}</div>}</span>
-      <Icon name="ch" size={18} color="#8A84A3" />
+      <span className="ico"><Icon name={icon} size={20} color={danger ? 'var(--red)' : 'var(--p)'} /></span>
+      <span className="flex1"><div className="ttl" style={danger ? { color: 'var(--red)' } : null}>{title}{isNew && <span className="new">{t('new')}</span>}</div>{sub && <div className="t" style={{ fontSize: 11 }}>{sub}</div>}</span>
+      {!danger && <Icon name="ch" size={18} color="#8A84A3" />}
     </button>
   )
 }
@@ -20,36 +23,77 @@ function Toggle({ icon, title, sub, on, set }) {
   )
 }
 
-export default function Settings({ state, setState, reset, go, flash }) {
+export default function Settings({ state, setState, reset, go, flash, mode, user, cloud, logout, deleteAccount, leaveGuest, setLang }) {
+  const { t, lang } = useT()
+  const [confirmDel, setConfirmDel] = useState(false)
+  const [busy, setBusy] = useState(false)
   const p = state.profile
   const me = who(p)
   const setS = (k) => (v) => setState((s) => ({ ...s, settings: { ...s.settings, [k]: v } }))
+  const staff = p.staff?.startsWith('p.') ? t(p.staff) : p.staff
+
   return (
     <div className="sc">
-      <div className="top" style={{ marginTop: 6 }}><h1 className="h1b">Settings</h1></div>
+      <div className="top" style={{ marginTop: 6 }}><h1 className="h1b">{t('s.title')}</h1></div>
       <button className="me" onClick={() => go('profile')}>
         <span className="av" style={{ width: 54, height: 54 }}>{me.initials}</span>
-        <span className="flex1"><div style={{ fontSize: 15, fontWeight: 600 }}>{p.business}</div><div className="t">{[p.name, p.role].filter(Boolean).join(' · ')}</div></span>
+        <span className="flex1"><div style={{ fontSize: 15, fontWeight: 600 }}>{p.business}</div><div className="t">{[p.name, p.role].filter(Boolean).join(' · ') || staff}</div></span>
         <Icon name="ch" size={20} color="var(--p)" />
       </button>
-      <div className="lbl">Account</div>
+
+      {mode === 'guest' && cloud && (
+        <button className="alert" style={{ background: 'var(--lav2)' }} onClick={() => leaveGuest('signup')}>
+          <Icon name="lock" size={22} color="var(--p)" />
+          <div className="flex1"><div style={{ fontSize: 13.5, fontWeight: 600 }}>{t('s.guestT')}</div><div className="t" style={{ marginTop: 2 }}>{t('s.guestS')}</div></div>
+          <Icon name="ch" size={18} color="#8A84A3" />
+        </button>
+      )}
+
+      <div className="lbl">{t('s.account')}</div>
       <div className="card">
-        <Row icon="bld" title="Business profile" sub={p.industry || 'Add what your business does'} onClick={() => go('profile')} />
-        <Row icon="bank" title="Main bank" sub={p.bank || 'Not set'} onClick={() => go('profile')} />
-        <Row icon="book" title="Trusted records" sub="Suppliers and organisations you have verified" isNew onClick={() => go('records')} />
+        <Row icon="bld" title={t('s.profile')} sub={p.industry || t('s.addWhat')} onClick={() => go('profile')} />
+        <Row icon="bank" title={t('s.bank')} sub={p.bank || t('s.notSet')} onClick={() => go('profile')} />
+        <Row icon="book" title={t('s.records')} sub={t('s.recordsSub')} isNew onClick={() => go('records')} />
       </div>
-      <div className="lbl">Notifications</div>
+      <div className="lbl">{t('s.notifs')}</div>
       <div className="card">
-        <Toggle icon="bell" title="Scam alerts" sub="Badge on the bell for new alerts" on={state.settings.alerts} set={setS('alerts')} />
-        <Toggle icon="clock" title="Follow-up reminders" sub="Remind me about checks I still need to confirm" on={state.settings.reminders} set={setS('reminders')} />
+        <Toggle icon="bell" title={t('s.alerts')} sub={t('s.alertsSub')} on={state.settings.alerts} set={setS('alerts')} />
+        <Toggle icon="clock" title={t('s.reminders')} sub={t('s.remindersSub')} on={state.settings.reminders} set={setS('reminders')} />
       </div>
-      <div className="lbl">Privacy &amp; Data</div>
+      <div className="lbl">{t('s.privacy')}</div>
       <div className="card">
-        <Row icon="lock" title="Your data" sub={`${state.history.length} checks and ${state.records.length} records, on this device only`} onClick={() => go('privacy')} />
+        <Row icon="lock" title={t('s.data')} sub={t('s.dataSub', { a: state.history.length, b: state.records.length })} onClick={() => go('privacy')} />
       </div>
-      <div className="lbl">Language</div>
-      <div className="card"><div className="row"><span className="ico"><Icon name="globe" size={20} color="var(--p)" /></span><span className="flex1 ttl">English</span><Icon name="chk" size={20} color="var(--p)" /></div></div>
-      <button className="link" style={{ marginTop: 24, display: 'block', width: '100%', textAlign: 'center', color: 'var(--mut)', fontSize: 12 }} onClick={() => { reset(); flash('Demo data reset') }}>Reset demo data</button>
+      <div className="lbl">{t('s.language')}</div>
+      <div className="card">
+        {LANGS.map(([id, name]) => (
+          <button key={id} className="row" onClick={() => setLang(id)} aria-pressed={lang === id}>
+            <span className="ico"><Icon name="globe" size={20} color="var(--p)" /></span>
+            <span className="flex1 ttl">{name}</span>
+            {lang === id && <Icon name="chk" size={20} color="var(--p)" />}
+          </button>
+        ))}
+      </div>
+
+      {mode === 'user' && (
+        <>
+          <div className="t" style={{ marginTop: 22, textAlign: 'center' }}>{t('s.signedIn', { email: user?.email || '' })}</div>
+          <div className="card" style={{ marginTop: 8 }}>
+            <Row icon="ar" title={t('s.logout')} onClick={logout} />
+            {confirmDel ? (
+              <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+                <span className="flex1 ttl" style={{ minWidth: 180 }}>{t('s.deleteQ')}</span>
+                <button className="chip" onClick={() => setConfirmDel(false)} disabled={busy}>{t('cancel')}</button>
+                <button className="chip on" style={{ background: 'var(--red)', borderColor: 'var(--red)' }} disabled={busy} onClick={async () => { setBusy(true); const ok = await deleteAccount(); if (!ok) setBusy(false) }}>{t('delete')}</button>
+              </div>
+            ) : <Row icon="trash" title={t('s.deleteAcc')} danger onClick={() => setConfirmDel(true)} />}
+          </div>
+        </>
+      )}
+      {mode === 'guest' && (
+        <button className="link" style={{ marginTop: 24, display: 'block', width: '100%', textAlign: 'center', color: 'var(--mut)', fontSize: 12 }} onClick={() => { reset(); flash(t('s.resetDone')) }}>{t('s.reset')}</button>
+      )}
+      <div style={{ height: 12 }} />
     </div>
   )
 }

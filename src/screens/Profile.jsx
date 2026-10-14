@@ -1,81 +1,78 @@
 import { useState } from 'react'
 import Icon from '../icons.jsx'
+import { useT } from '../i18n.js'
 import { who } from '../store.js'
 import { Header } from './Alerts.jsx'
 
+const STAFF = ['p.staff.1', '2-5', '6-10', '11-50', '50+']
 const FIELDS = [
-  ['business', 'Business name', 'text', 'e.g. Port Louis Traders Ltd'],
-  ['about', 'What your business does', 'area', 'One or two sentences'],
-  ['industry', 'Industry', 'text', 'e.g. Retail, Hospitality, Services'],
-  ['location', 'Location', 'text', 'e.g. Port Louis, Mauritius'],
-  ['staff', 'Team size', 'select', ['Just me', '2-5', '6-10', '11-50', '50+']],
-  ['name', 'Your name', 'text', ''],
-  ['role', 'Your role', 'text', 'e.g. Owner, Accountant'],
-  ['email', 'Business email', 'email', 'you@yourbusiness.mu'],
-  ['phone', 'Phone', 'tel', 'Optional'],
-  ['bank', 'Main bank', 'text', 'e.g. MCB, SBM'],
+  ['business', 'text'], ['about', 'area'], ['industry', 'text'], ['location', 'text'], ['staff', 'select'],
+  ['name', 'text'], ['role', 'text'], ['email', 'email'], ['phone', 'tel'], ['bank', 'text'],
 ]
 
-export default function Profile({ state, setState, back, flash }) {
+export default function Profile({ state, setState, back, flash, user }) {
+  const { t } = useT()
   const p = state.profile
   const me = who(p)
   const [edit, setEdit] = useState(false)
   const [draft, setDraft] = useState(p)
   const [err, setErr] = useState('')
   const set = (k) => (e) => setDraft((d) => ({ ...d, [k]: e.target.value }))
+  const show = (v) => (typeof v === 'string' && v.startsWith('p.') ? t(v) : v)
 
   function save() {
-    if (!draft.business.trim()) { setErr('Add your business name.'); return }
-    if (draft.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(draft.email)) { setErr('That email address does not look right.'); return }
+    if (!String(draft.business || '').trim()) { setErr(t('p.errBusiness')); return }
+    if (draft.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(draft.email)) { setErr(t('p.errEmail')); return }
     const clean = Object.fromEntries(Object.entries(draft).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v]))
     setState((s) => ({ ...s, profile: { ...clean, sample: false } }))
-    setEdit(false); setErr(''); flash('Profile saved')
+    setEdit(false); setErr(''); flash(t('p.saved'))
   }
 
   if (edit) {
     return (
       <>
-        <Header title="Edit profile" back={() => { setEdit(false); setDraft(p); setErr('') }} />
+        <Header title={t('p.editTitle')} back={() => { setEdit(false); setDraft(p); setErr('') }} />
         <div className="sc" style={{ paddingTop: 12 }}>
-          {FIELDS.map(([k, label, type, hint]) => (
+          {FIELDS.map(([k, type]) => (
             <label key={k} className="field">
-              <span>{label}</span>
-              {type === 'area' ? <textarea className="inp" rows={3} value={draft[k] || ''} onChange={set(k)} placeholder={hint} maxLength={240} />
-                : type === 'select' ? <select className="inp" value={draft[k] || ''} onChange={set(k)}>{hint.map((o) => <option key={o}>{o}</option>)}</select>
-                  : <input className="inp" type={type} value={draft[k] || ''} onChange={set(k)} placeholder={hint} maxLength={120} />}
+              <span>{t('p.f.' + k)}</span>
+              {type === 'area' ? <textarea className="inp" rows={3} value={draft[k] || ''} onChange={set(k)} placeholder={t('p.h.' + k)} maxLength={240} />
+                : type === 'select' ? <select className="inp" value={draft[k] || ''} onChange={set(k)}><option value="">—</option>{STAFF.map((o) => <option key={o} value={o}>{show(o)}</option>)}</select>
+                  : <input className="inp" type={type} value={draft[k] || ''} onChange={set(k)} placeholder={t('p.h.' + k) === 'p.h.' + k ? '' : t('p.h.' + k)} maxLength={120} />}
             </label>
           ))}
           {err && <div className="err" role="alert">{err}</div>}
-          <p className="t" style={{ fontSize: 11.5, marginTop: 12, lineHeight: 1.5 }}>Saved on this device only. Your business name, industry and description are sent with each check so the AI can judge whether a request makes sense for you.</p>
+          <p className="t" style={{ fontSize: 11.5, marginTop: 12, lineHeight: 1.5 }}>{t('p.note')}</p>
         </div>
-        <div className="stack"><button className="btn pri" onClick={save}>Save profile</button></div>
+        <div className="stack"><button className="btn pri" onClick={save}>{t('p.save')}</button></div>
       </>
     )
   }
 
-  const rows = [['bld', 'Industry', p.industry], ['globe', 'Location', p.location], ['mail', 'Business email', p.email], ['chat', 'Phone', p.phone], ['bank', 'Main bank', p.bank], ['clock', 'Team size', p.staff]].filter((r) => r[2])
+  const rows = [['bld', 'industry'], ['globe', 'location'], ['mail', 'email'], ['chat', 'phone'], ['bank', 'bank'], ['clock', 'staff']].filter(([, k]) => p[k])
   return (
     <>
-      <Header title="Business profile" back={back} right={<button className="link" style={{ fontWeight: 600, fontSize: 14 }} onClick={() => { setDraft(p); setEdit(true) }}>Edit</button>} />
+      <Header title={t('p.title')} back={back} right={<button className="link" style={{ fontWeight: 600, fontSize: 14 }} onClick={() => { setDraft(p); setEdit(true) }}>{t('edit')}</button>} />
       <div className="sc" style={{ paddingTop: 14 }}>
         <div className="me" style={{ marginTop: 0, flexDirection: 'column', textAlign: 'center', padding: '24px 16px' }}>
           <span className="av" style={{ width: 72, height: 72, fontSize: 22 }}>{me.initials}</span>
           <div style={{ fontSize: 19, fontWeight: 600, marginTop: 12 }}>{p.business}</div>
           <div className="t">{[p.name, p.role].filter(Boolean).join(' · ')}</div>
-          {p.sample && <span className="pill grey" style={{ marginTop: 10 }}><i />Sample profile, tap Edit to make it yours</span>}
+          {user?.email && <div className="t" style={{ marginTop: 2 }}>{user.email}</div>}
+          {p.sample && <span className="pill grey" style={{ marginTop: 10, whiteSpace: 'normal' }}><i />{t('p.sample')}</span>}
         </div>
-        {p.about && (<><div className="lbl">About</div><div className="card" style={{ padding: 16, fontSize: 14, lineHeight: 1.55 }}>{p.about}</div></>)}
-        <div className="lbl">Details</div>
-        <div className="card">
-          {rows.map(([i, l, v]) => (
-            <div className="row" key={l}><span className="ico"><Icon name={i} size={20} color="var(--p)" /></span><span className="flex1"><div className="t" style={{ fontSize: 11 }}>{l}</div><div className="ttl" style={{ wordBreak: 'break-word' }}>{v}</div></span></div>
-          ))}
-        </div>
+        {p.about && (<><div className="lbl">{t('p.about')}</div><div className="card" style={{ padding: 16, fontSize: 14, lineHeight: 1.55 }}>{p.about}</div></>)}
+        {rows.length > 0 && <div className="lbl">{t('p.details')}</div>}
+        {rows.length > 0 && (
+          <div className="card">
+            {rows.map(([i, k]) => (
+              <div className="row" key={k}><span className="ico"><Icon name={i} size={20} color="var(--p)" /></span><span className="flex1"><div className="t" style={{ fontSize: 11 }}>{t('p.f.' + k)}</div><div className="ttl" style={{ wordBreak: 'break-word' }}>{show(p[k])}</div></span></div>
+            ))}
+          </div>
+        )}
         <div style={{ marginTop: 16, background: 'var(--lav2)', borderRadius: 18, padding: 14, display: 'flex', gap: 12 }}>
           <Icon name="shok" size={22} color="var(--p)" />
-          <div className="t" style={{ color: 'var(--ink)', lineHeight: 1.5 }}>
-            {me.domain ? <>Messages from addresses that imitate <b>@{me.domain}</b> are flagged, because scammers copy a business's own address to trick staff into paying.</> : <>Add a business email on your own domain (not Gmail) and MoniGuard will flag addresses that imitate it.</>}
-          </div>
+          <div className="t" style={{ color: 'var(--ink)', lineHeight: 1.5 }}>{me.domain ? t('p.protectYes', { domain: me.domain }) : t('p.protectNo')}</div>
         </div>
       </div>
     </>
