@@ -43,11 +43,14 @@ export default function Settings({ state, setState, reset, go, flash, mode, user
       </button>
 
       {mode === 'guest' && cloud && (
-        <button className="alert" style={{ background: 'var(--lav2)' }} onClick={() => leaveGuest('signup')}>
-          <Icon name="lock" size={22} color="var(--p)" />
-          <div className="flex1"><div style={{ fontSize: 13.5, fontWeight: 600 }}>{t('s.guestT')}</div><div className="t" style={{ marginTop: 2 }}>{t('s.guestS')}</div></div>
-          <Icon name="ch" size={18} color="#8A84A3" />
-        </button>
+        <>
+          <div className="lbl">{t('g.banner')}</div>
+          <div className="card">
+            <Row icon="lock" title={t('s.guestT')} sub={t('s.guestS')} onClick={() => leaveGuest('signup')} />
+            <Row icon="ar" title={t('g.login')} onClick={() => leaveGuest('login')} />
+            <Row icon="back" title={t('g.exit')} onClick={() => leaveGuest('welcome')} />
+          </div>
+        </>
       )}
 
       <div className="lbl">{t('s.account')}</div>

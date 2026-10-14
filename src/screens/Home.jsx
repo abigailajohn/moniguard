@@ -7,7 +7,7 @@ import InstallCard from './InstallCard.jsx'
 
 const TILES = [['chat', 'message', 'text'], ['mail', 'email', 'text'], ['link', 'link', 'link'], ['doc', 'invoice', 'file'], ['img', 'screenshot', 'file'], ['qr', 'qr', 'qr']]
 
-export default function Home({ state, go, tab, setCurrent, setPending, setAlertId }) {
+export default function Home({ state, go, tab, setCurrent, setPending, setAlertId, mode, cloud, leaveGuest }) {
   const { t, lang } = useT()
   const L = labels(lang)
   const p = state.profile
@@ -36,6 +36,13 @@ export default function Home({ state, go, tab, setCurrent, setPending, setAlertI
           <button className="av" aria-label={t('home.profile')} onClick={() => go('profile')} style={{ width: 44, height: 44, background: 'var(--lav)', fontSize: 14, border: 0 }}>{me.initials}</button>
         </div>
       </div>
+      {mode === 'guest' && cloud && (
+        <div className="guestbar">
+          <span className="flex1">{t('g.banner')}</span>
+          <button className="link" onClick={() => leaveGuest('login')}>{t('g.login')}</button>
+          <button className="link" onClick={() => leaveGuest('signup')}>{t('g.signup')}</button>
+        </div>
+      )}
       <h1 style={{ marginTop: 18 }}>{t('home.q')}</h1>
       <button className="verifycard" onClick={() => tab('verify')}>
         <span className="big"><Icon name="scan" size={30} color="var(--p)" /></span>
