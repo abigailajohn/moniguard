@@ -9,7 +9,7 @@ const userError = (code, msg) => Object.assign(new Error(msg || code), { user: t
 //   input: { text, source: 'text'|'link'|'qr'|'file', file?: { mediaType, data } }
 export async function analyse(input, { trusted = [], profile = null, lang = 'en' } = {}) {
   const { text = '', source = 'text', file = null } = input
-  const own = profile ? { domain: profile.domain || null, business: profile.business, industry: profile.industry, about: profile.about } : null
+  const own = profile ? { domain: profile.domain || null, business: profile.business, industry: profile.industry, about: profile.about, bank: profile.bank || null } : null
   const slimTrusted = trusted.map((t) => ({ name: t.name, domain: t.domain }))
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), file ? 60000 : 25000)

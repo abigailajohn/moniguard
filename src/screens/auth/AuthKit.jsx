@@ -2,14 +2,14 @@ import { useState } from 'react'
 import Icon from '../../icons.jsx'
 import { LANGS, useT } from '../../i18n.js'
 
-export function Logo({ size = 64 }) {
+export function Logo({ size = 64, animate = false }) {
   return (
-    <svg width={size} height={size * 150 / 140} viewBox="0 0 140 150" aria-hidden="true">
+    <svg width={size} height={size * 150 / 140} viewBox="0 0 140 150" aria-hidden="true" className={animate ? 'logo-anim' : undefined}>
       <path d="M10 28C40 28 55 18 70 8c15 10 30 20 60 20v48c0 34-26 56-60 70C36 132 10 110 10 76z" fill="#8B6FE6" />
       <path d="M10 28C40 28 55 18 70 8v128C36 132 10 110 10 76z" fill="#fff" fillOpacity=".1" />
-      <path d="m44 74 20 20 34-34" fill="none" stroke="#fff" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="108" cy="112" r="17" fill="#F6B73C" />
-      <text x="108" y="118" textAnchor="middle" fontFamily="Poppins,sans-serif" fontWeight="700" fontSize="17" fill="#1E1B2E">M</text>
+      <path className="tick" d="m44 74 20 20 34-34" fill="none" stroke="#fff" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
+      <circle className="badge" cx="108" cy="112" r="17" fill="#F6B73C" />
+      <text className="badge"  x="108" y="118" textAnchor="middle" fontFamily="Poppins,sans-serif" fontWeight="700" fontSize="17" fill="#1E1B2E">M</text>
     </svg>
   )
 }
@@ -51,10 +51,15 @@ export function PasswordField({ label, hint, ...props }) {
 }
 
 export function LangPicker({ lang, setLang }) {
+  // A dropdown scales to any number of languages; on phones it opens the native picker.
   return (
-    <div className="langpick" role="group" aria-label="Language">
-      {LANGS.map(([id, name]) => <button key={id} type="button" className={lang === id ? 'on' : ''} onClick={() => setLang(id)} aria-pressed={lang === id}>{id === 'mcr' ? 'Kreol' : name}</button>)}
-    </div>
+    <label className="langsel">
+      <Icon name="globe" size={18} color="var(--p)" />
+      <select value={lang} onChange={(e) => setLang(e.target.value)} aria-label="Language / Langue / Lang">
+        {LANGS.map(([id, name]) => <option key={id} value={id}>{name}</option>)}
+      </select>
+      <Icon name="dn" size={16} color="var(--p)" />
+    </label>
   )
 }
 

@@ -47,6 +47,21 @@ export const PACK = [
     source: 'Invoice / payment-diversion pattern (Bank of Mauritius notices), in Kreol Morisien.',
     text: 'From: compta@pltraders-mu.com\nBonzour, nou finn sanz nou kont labank. Pey fakir Rs 42,000 zordi mem lor nouvo kont 000123987654. Si ou pa pey, nou pou aret livrezon.',
   },
+  {
+    id: 'fr-bill-cutoff', expect: ['suspicious', 'high'],
+    source: 'Common French-language SMS theme (unpaid electricity bill, "coupure imminente"), listed by iarnaque.fr for 2026; adapted to Mauritius.',
+    text: "CEB: Votre facture d'électricité est impayée. Régularisez sous 24h pour éviter une coupure imminente : http://ceb-paiement.info/regler",
+  },
+  {
+    id: 'fr-parcel-fee', expect: ['suspicious', 'high'],
+    source: 'Common French-language SMS theme (parcel blocked, small customs or re-delivery fee), iarnaque.fr 2026; matches the Mauritius Post warning.',
+    text: 'Mauritius Post : votre colis est en attente. Payez les frais de dédouanement de Rs 95 ici : https://mupost-livraison.com',
+  },
+  {
+    id: 'fr-tax-refund', expect: ['high'],
+    source: 'Common French-language SMS theme (tax refund available, enter bank details), iarnaque.fr 2026; matches the MRA refund warning.',
+    text: "MRA : Un remboursement d'impôt de Rs 8 300 est disponible. Saisissez vos coordonnées bancaires sur http://mra-remboursement.com avant vendredi.",
+  },
   // Controls: these should NOT be flagged as high risk
   {
     id: 'legit-mra', expect: ['safe', 'inconclusive'],

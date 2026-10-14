@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Icon from '../icons.jsx'
 import { LANGS, useT } from '../i18n.js'
 import { who } from '../store.js'
+import InstallCard from './InstallCard.jsx'
 
 function Row({ icon, title, sub, onClick, isNew, danger }) {
   const { t } = useT()
@@ -60,6 +61,8 @@ export default function Settings({ state, setState, reset, go, flash, mode, user
         <Toggle icon="bell" title={t('s.alerts')} sub={t('s.alertsSub')} on={state.settings.alerts} set={setS('alerts')} />
         <Toggle icon="clock" title={t('s.reminders')} sub={t('s.remindersSub')} on={state.settings.reminders} set={setS('reminders')} />
       </div>
+      <div className="lbl">{t('s.app')}</div>
+      <div className="card"><InstallCard /></div>
       <div className="lbl">{t('s.privacy')}</div>
       <div className="card">
         <Row icon="lock" title={t('s.data')} sub={t('s.dataSub', { a: state.history.length, b: state.records.length })} onClick={() => go('privacy')} />

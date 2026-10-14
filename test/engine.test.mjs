@@ -56,4 +56,10 @@ assert.ok(/imite/.test(frResult.findings[0].title), 'French wording expected')
 const mcrResult = analyseRules(SAMPLES.find((x) => x.id === 'mcr').text, { trusted, lang: 'mcr' })
 assert.ok(mcrResult.findings.some((f) => f.id === 'bank'), 'Kreol changed bank account should be caught')
 
+const notMine = analyseRules('SBM: your account has been suspended. Verify your details at http://sbm-secure.top', { own: { bank: 'MCB' } })
+assert.ok(notMine.findings.some((f) => f.id === 'notmybank'), 'message about an account at a bank that is not yours should be flagged')
+const mine = analyseRules('MCB: your account statement is ready at https://www.mcb.mu', { own: { bank: 'MCB' } })
+assert.ok(!mine.findings.some((f) => f.id === 'notmybank'), 'your own bank should not trigger the rule')
+console.log('main bank rule ok')
+
 console.log('\nAll engine checks passed.')

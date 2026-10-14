@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Icon from '../icons.jsx'
 import { labels } from '../labels.js'
 import { useT } from '../i18n.js'
@@ -6,10 +6,33 @@ import { uid, when } from '../store.js'
 
 const FICON = { risk: ['exc', 'var(--red)'], ok: ['cc', '#1E7A4A'], info: ['help', 'var(--mut)'] }
 
+// Counts a number up from 0, for the confidence figure.
+function useCountUp(target, ms = 900) {
+  const [n, setN] = useState(0)
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setN(target); return }
+    let raf
+    const t0 = performance.now() + 250
+    const step = (now) => {
+      const p = Math.min(1, Math.max(0, (now - t0) / ms))
+      setN(Math.round(target * (1 - Math.pow(1 - p, 3))))
+      if (p < 1) raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [target, ms])
+  return n
+}
+
 export default function Result({ current, state, setState, back, go, tab, flash }) {
   const { t, lang } = useT()
   const [open, setOpen] = useState(0)
   const [showRead, setShowRead] = useState(false)
+  const shown = useCountUp(current?.result?.confidence?.value || 0)
+  useEffect(() => {
+    // A short buzz on phones that support it when something is high risk.
+    if (current?.result?.label === 'high' && Date.now() - new Date(current.ts).getTime() < 5000) navigator.vibrate?.([40, 60, 40])
+  }, [current])
   if (!current) { return <div className="sc"><div className="empty">{t('r.none')}<br /><button className="link" onClick={() => tab('verify')}>{t('home.checkSomething')}</button></div></div> }
   const r = current.result
   const L = labels(lang)[r.label]
@@ -71,7 +94,7 @@ export default function Result({ current, state, setState, back, go, tab, flash 
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}><Icon name={L.icon} size={30} /><div style={{ fontSize: 22, fontWeight: 600, lineHeight: 1.2 }}>{L.banner}</div></div>
           <div style={{ fontSize: 13, marginTop: 10 }}>{r.subtitle}</div>
           {r.summary && <div style={{ fontSize: 12.5, marginTop: 8, opacity: 0.85 }}>{t('r.asks', { s: r.summary })}</div>}
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 500, marginTop: 18 }}><span>{t('r.conf')}</span><b style={{ fontSize: 13 }}>{r.confidence.value}% · {t('r.lvl.' + r.confidence.level)}</b></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 500, marginTop: 18 }}><span>{t('r.conf')}</span><b style={{ fontSize: 13 }}>{shown}% · {t('r.lvl.' + r.confidence.level)}</b></div>
           <div className="conf"><i style={{ width: `${r.confidence.value}%` }} /></div>
         </div>
 
@@ -80,7 +103,7 @@ export default function Result({ current, state, setState, back, go, tab, flash 
           const [ico, col] = FICON[f.level]
           const isOpen = open === i
           return (
-            <button key={f.id} className="find" onClick={() => setOpen(isOpen ? -1 : i)} aria-expanded={isOpen}>
+            <button key={f.id} className="find" style={{ '--i': i }} onClick={() => setOpen(isOpen ? -1 : i)} aria-expanded={isOpen}>
               <div className="h"><Icon name={ico} size={26} color={col} /><div className="flex1" style={{ fontSize: 13.5, fontWeight: 500, lineHeight: 1.35 }}>{f.title}</div><Icon name={isOpen ? 'up' : 'dn'} size={20} color="var(--mut)" /></div>
               {isOpen && <div className={`d ${f.level}`}>{f.detail}</div>}
             </button>

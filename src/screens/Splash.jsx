@@ -8,7 +8,7 @@ export default function Splash({ loading }) {
       <i className="blob" style={{ left: -90, top: 150, background: 'radial-gradient(#CFC3F5,#CFC3F500 70%)' }} />
       <i className="blob" style={{ right: -110, top: 380, background: 'radial-gradient(#F7D9B5,#F7D9B500 70%)' }} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60 }}>
-        <Logo size={140} />
+        <Logo size={140} animate />
         <div style={{ fontSize: 36, fontWeight: 700, marginTop: 24, letterSpacing: -0.5, color: 'var(--ink)' }}>MoniGuard</div>
         <div style={{ fontSize: 16, color: 'var(--mut)', marginTop: 10 }}>{t('splash.tag')}</div>
       </div>

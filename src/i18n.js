@@ -121,13 +121,13 @@ const en = {
   's.privacy': 'Privacy & Data', 's.data': 'Your data', 's.dataSub': '{a} checks and {b} records', 's.language': 'Language',
   's.signedIn': 'Signed in as {email}', 's.logout': 'Log out', 's.deleteAcc': 'Delete account', 's.deleteQ': "Delete your account and all your data? This can't be undone.",
   's.deleted': 'Account deleted', 's.guestT': 'Create an account', 's.guestS': 'Save your checks and records across devices', 's.reset': 'Reset demo data', 's.resetDone': 'Demo data reset',
-  's.loggedOut': 'Logged out',
+  's.loggedOut': 'Logged out', 's.app': 'App',
 
   'p.title': 'Business profile', 'p.editTitle': 'Edit profile', 'p.save': 'Save profile', 'p.saved': 'Profile saved',
   'p.f.business': 'Business name', 'p.f.about': 'What your business does', 'p.f.industry': 'Industry', 'p.f.location': 'Location', 'p.f.staff': 'Team size',
   'p.f.name': 'Your name', 'p.f.role': 'Your role', 'p.f.email': 'Business email', 'p.f.phone': 'Phone', 'p.f.bank': 'Main bank',
   'p.h.business': 'e.g. Port Louis Traders Ltd', 'p.h.about': 'One or two sentences', 'p.h.industry': 'e.g. Retail, Hospitality, Services', 'p.h.location': 'e.g. Port Louis, Mauritius',
-  'p.h.role': 'e.g. Owner, Accountant', 'p.h.email': 'you@yourbusiness.mu', 'p.h.phone': 'Optional', 'p.h.bank': 'e.g. MCB, SBM',
+  'p.h.role': 'e.g. Owner, Accountant', 'p.h.email': 'you@yourbusiness.mu', 'p.h.phone': 'Optional', 'p.h.bank': 'e.g. MCB, SBM. Helps spot fake bank messages',
   'p.staff.1': 'Just me', 'p.errBusiness': 'Add your business name.', 'p.errEmail': 'That email address does not look right.',
   'p.note': 'Your business name, industry and description are sent with each check so the AI can judge whether a request makes sense for you.',
   'p.sample': 'Sample profile, tap Edit to make it yours', 'p.about': 'About', 'p.details': 'Details',
@@ -150,7 +150,10 @@ const en = {
   'learn.way': 'On the way', 'learn.t1': 'Spotting fake supplier invoices', 'learn.t2': 'Checking a payment request', 'learn.t3': 'What to do if you have paid',
 
   'when.today': 'Today · {t}', 'when.yesterday': 'Yesterday',
-  'loading': 'Loading your account…', 'sync.fail': "Couldn't save to your account. Check your connection.",
+  'loading': 'Loading your account…',
+  'inst.title': 'Install the app', 'inst.sub': 'Add MoniGuard to your home screen. It opens full screen, like any app.',
+  'inst.btn': 'Install', 'inst.later': 'Not now', 'inst.ios': 'On iPhone: tap the Share button, then "Add to Home Screen".', 'inst.done': 'MoniGuard is installed on this device',
+  'inst.how': 'How to install', 'inst.other': 'In your browser menu, choose "Install app" or "Add to Home Screen".', 'sync.fail': "Couldn't save to your account. Check your connection.",
 }
 
 const fr = {
@@ -256,12 +259,12 @@ const fr = {
   's.privacy': 'Confidentialité et données', 's.data': 'Vos données', 's.dataSub': '{a} vérifications et {b} fournisseurs', 's.language': 'Langue',
   's.signedIn': 'Connecté en tant que {email}', 's.logout': 'Se déconnecter', 's.deleteAcc': 'Supprimer le compte', 's.deleteQ': 'Supprimer votre compte et toutes vos données ? Action irréversible.',
   's.deleted': 'Compte supprimé', 's.guestT': 'Créer un compte', 's.guestS': 'Retrouvez vos vérifications sur tous vos appareils', 's.reset': 'Réinitialiser la démo', 's.resetDone': 'Démo réinitialisée',
-  's.loggedOut': 'Déconnecté',
+  's.loggedOut': 'Déconnecté', 's.app': 'Application',
   'p.title': "Profil de l'entreprise", 'p.editTitle': 'Modifier le profil', 'p.save': 'Enregistrer le profil', 'p.saved': 'Profil enregistré',
   'p.f.business': "Nom de l'entreprise", 'p.f.about': 'Activité de votre entreprise', 'p.f.industry': 'Secteur', 'p.f.location': 'Lieu', 'p.f.staff': "Taille de l'équipe",
   'p.f.name': 'Votre nom', 'p.f.role': 'Votre rôle', 'p.f.email': 'E-mail professionnel', 'p.f.phone': 'Téléphone', 'p.f.bank': 'Banque principale',
   'p.h.business': 'ex. Port Louis Traders Ltd', 'p.h.about': 'Une ou deux phrases', 'p.h.industry': 'ex. Commerce, Hôtellerie, Services', 'p.h.location': 'ex. Port-Louis, Maurice',
-  'p.h.role': 'ex. Gérant, Comptable', 'p.h.email': 'vous@votreentreprise.mu', 'p.h.phone': 'Facultatif', 'p.h.bank': 'ex. MCB, SBM',
+  'p.h.role': 'ex. Gérant, Comptable', 'p.h.email': 'vous@votreentreprise.mu', 'p.h.phone': 'Facultatif', 'p.h.bank': 'ex. MCB, SBM. Aide à repérer les faux messages bancaires',
   'p.staff.1': 'Moi seul', 'p.errBusiness': "Ajoutez le nom de l'entreprise.", 'p.errEmail': 'Cette adresse e-mail semble incorrecte.',
   'p.note': "Le nom, le secteur et la description de l'entreprise sont envoyés avec chaque vérification pour aider l'IA à juger une demande.",
   'p.sample': 'Profil exemple, appuyez sur Modifier', 'p.about': 'À propos', 'p.details': 'Détails',
@@ -280,7 +283,10 @@ const fr = {
   'learn.title': 'Apprendre', 'learn.h': 'Guides courts pour repérer les arnaques financières', 'learn.b': 'Des conseils pratiques et simples pour les dirigeants, tirés des arnaques vues à Maurice.',
   'learn.way': 'Bientôt disponible', 'learn.t1': 'Repérer les fausses factures', 'learn.t2': 'Vérifier une demande de paiement', 'learn.t3': 'Que faire si vous avez payé',
   'when.today': "Aujourd'hui · {t}", 'when.yesterday': 'Hier',
-  'loading': 'Chargement de votre compte…', 'sync.fail': "Impossible d'enregistrer dans votre compte. Vérifiez votre connexion.",
+  'loading': 'Chargement de votre compte…',
+  'inst.title': "Installer l'application", 'inst.sub': "Ajoutez MoniGuard à votre écran d'accueil. Elle s'ouvre en plein écran, comme une vraie app.",
+  'inst.btn': 'Installer', 'inst.later': 'Plus tard', 'inst.ios': "Sur iPhone : touchez Partager, puis « Sur l'écran d'accueil ».", 'inst.done': 'MoniGuard est installée sur cet appareil',
+  'inst.how': 'Comment installer', 'inst.other': "Dans le menu du navigateur, choisissez « Installer l'application » ou « Ajouter à l'écran d'accueil ».", 'sync.fail': "Impossible d'enregistrer dans votre compte. Vérifiez votre connexion.",
 }
 
 const mcr = {
@@ -386,12 +392,12 @@ const mcr = {
   's.privacy': 'Konfidansialite ek done', 's.data': 'Ou done', 's.dataSub': '{a} verifikasion ek {b} fourniser', 's.language': 'Lang',
   's.signedIn': 'Konekte kouma {email}', 's.logout': 'Dekonekte', 's.deleteAcc': 'Efas kont', 's.deleteQ': 'Efas ou kont ek tou ou done? Pa kapav defer sa.',
   's.deleted': 'Kont finn efase', 's.guestT': 'Kre enn kont', 's.guestS': 'Sov ou verifikasion lor tou ou aparey', 's.reset': 'Reset done demo', 's.resetDone': 'Done demo finn reset',
-  's.loggedOut': 'Finn dekonekte',
+  's.loggedOut': 'Finn dekonekte', 's.app': 'App',
   'p.title': 'Profil biznes', 'p.editTitle': 'Modifie profil', 'p.save': 'Sov profil', 'p.saved': 'Profil sove',
   'p.f.business': 'Nom biznes', 'p.f.about': 'Ki ou biznes fer', 'p.f.industry': 'Sekter', 'p.f.location': 'Landrwa', 'p.f.staff': 'Gran lekip',
   'p.f.name': 'Ou nom', 'p.f.role': 'Ou rol', 'p.f.email': 'Email biznes', 'p.f.phone': 'Telefonn', 'p.f.bank': 'Labank prinsipal',
   'p.h.business': 'egzanp Port Louis Traders Ltd', 'p.h.about': 'Enn ou de fraz', 'p.h.industry': 'egzanp Komers, Lotelri, Servis', 'p.h.location': 'egzanp Port-Louis, Moris',
-  'p.h.role': 'egzanp Propriyeter, Kontab', 'p.h.email': 'ou@oubiznes.mu', 'p.h.phone': 'Si ou le', 'p.h.bank': 'egzanp MCB, SBM',
+  'p.h.role': 'egzanp Propriyeter, Kontab', 'p.h.email': 'ou@oubiznes.mu', 'p.h.phone': 'Si ou le', 'p.h.bank': 'egzanp MCB, SBM. Ed trouv fos mesaz labank',
   'p.staff.1': 'Zis mwa', 'p.errBusiness': 'Met nom ou biznes.', 'p.errEmail': 'Sa adres email-la pa paret bon.',
   'p.note': 'Nom, sekter ek deskripsion ou biznes avoye avek sak verifikasion pou ki AI kapav zize si enn demann fer sans.',
   'p.sample': 'Profil egzanp, tap Modifie pou fer li pou ou', 'p.about': 'Lor nou', 'p.details': 'Detay',
@@ -410,7 +416,10 @@ const mcr = {
   'learn.title': 'Aprann', 'learn.h': 'Ti gid pou trouv eskrokri finansie', 'learn.b': 'Konsey pratik ek sinp pou propriyeter biznes, lor bann eskrokri ki nou trouve dan Moris.',
   'learn.way': 'Pe vini', 'learn.t1': 'Trouv fos fakir fourniser', 'learn.t2': 'Verifie enn demann peyman', 'learn.t3': 'Ki pou fer si ou finn deza pey',
   'when.today': 'Zordi · {t}', 'when.yesterday': 'Yer',
-  'loading': 'Pe sarz ou kont…', 'sync.fail': 'Pa finn kapav sov dan ou kont. Get ou koneksion.',
+  'loading': 'Pe sarz ou kont…',
+  'inst.title': 'Instal app-la', 'inst.sub': 'Met MoniGuard lor ou lekran akey. Li ouver plin lekran, kouma enn vre app.',
+  'inst.btn': 'Instale', 'inst.later': 'Pli tar', 'inst.ios': 'Lor iPhone: tap Partaz, apre "Add to Home Screen".', 'inst.done': 'MoniGuard instale lor sa aparey-la',
+  'inst.how': 'Kouma instale', 'inst.other': 'Dan menu navigater, swazir "Install app" ou "Add to Home Screen".', 'sync.fail': 'Pa finn kapav sov dan ou kont. Get ou koneksion.',
 }
 
 const DICTS = { en, fr, mcr }

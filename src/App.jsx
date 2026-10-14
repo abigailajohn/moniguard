@@ -55,10 +55,12 @@ export default function App() {
   const i18n = useMemo(() => ({ lang, t }), [lang, t])
   useEffect(() => { document.documentElement.lang = lang === 'mcr' ? 'mfe' : lang }, [lang])
 
-  const go = (s) => setStack((st) => [...st, s])
-  const replace = (s) => setStack((st) => [...st.slice(0, -1), s])
-  const back = () => setStack((st) => (st.length > 1 ? st.slice(0, -1) : st))
-  const tab = (s) => setStack([s])
+  // Direction of the last move, used for the slide animation between screens.
+  const dir = useRef('fade')
+  const go = (s) => { dir.current = 'fwd'; setStack((st) => [...st, s]) }
+  const replace = (s) => { dir.current = 'fade'; setStack((st) => [...st.slice(0, -1), s]) }
+  const back = () => { dir.current = 'back'; setStack((st) => (st.length > 1 ? st.slice(0, -1) : st)) }
+  const tab = (s) => { dir.current = 'fade'; setStack([s]) }
   const flash = useCallback((m) => { setToast(m); clearTimeout(toastTimer.current); toastTimer.current = setTimeout(() => setToast(''), 2200) }, [])
   const setModeBoth = (m) => { modeRef.current = m; setMode(m) }
 
@@ -182,7 +184,9 @@ export default function App() {
             <button className="btn out" style={{ marginTop: 10 }} onClick={actions.logout}>{t('s.logout')}</button>
           </div>
         ) : needsState && !state ? null : (
-          <Screen key={stack.length + screen} {...ctx} loading={mode === 'loading'} />
+          <div className={`screen ${dir.current}`} key={stack.length + screen}>
+            <Screen {...ctx} loading={mode === 'loading'} />
+          </div>
         )}
         {active && state && (
           <nav className="nav" aria-label="Main">

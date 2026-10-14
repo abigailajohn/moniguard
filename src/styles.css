@@ -149,3 +149,60 @@ h1{font-size:30px;font-weight:600;margin:0;letter-spacing:-.4px;line-height:1.2}
 .obcard{display:flex;gap:14px;align-items:flex-start;background:#fff;border-radius:20px;padding:16px;box-shadow:var(--shadow)}
 .hdr b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .authsc>*{flex-shrink:0}
+/* --- motion (app feel). Everything here is switched off for "reduce motion" users --- */
+.screen{flex:1;display:flex;flex-direction:column;min-height:0;animation:.3s cubic-bezier(.2,.8,.2,1) both}
+.screen.fwd{animation-name:inRight}.screen.back{animation-name:inLeft}.screen.fade{animation-name:fadeUp;animation-duration:.22s}
+@keyframes inRight{from{transform:translateX(32px);opacity:0}to{transform:none;opacity:1}}
+@keyframes inLeft{from{transform:translateX(-32px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadeUp{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes rise{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pop{0%{transform:scale(.94);opacity:0}60%{transform:scale(1.015);opacity:1}100%{transform:none}}
+@keyframes grow{from{width:0}}
+@keyframes nudge{0%,100%{transform:none}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+@keyframes draw{from{stroke-dashoffset:80}to{stroke-dashoffset:0}}
+@keyframes toastIn{from{transform:translate(-50%,12px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* tap feedback */
+:is(.btn,.tile,.chip,.verifycard,.notif,.manage,.me,.alert,.followup,.find,.obcard,.filecard){transition:transform .12s ease,box-shadow .2s,background-color .2s}
+:is(.btn,.tile,.chip,.verifycard,.notif,.manage.on,.me,.alert,.followup):active:not(:disabled){transform:scale(.97)}
+.row{transition:background-color .15s}button.row:active{background:#F6F3FD}
+.nav button .pillbg{transition:background-color .25s,transform .15s}.nav button:active .pillbg{transform:scale(.9)}
+.iconbtn{transition:background-color .15s,transform .12s}.iconbtn:active{transform:scale(.92);background:var(--lav)}
+
+/* home: content arrives in a gentle cascade */
+.stagger>*{animation:rise .42s cubic-bezier(.2,.8,.2,1) both}
+.stagger>*:nth-child(2){animation-delay:.04s}.stagger>*:nth-child(3){animation-delay:.08s}.stagger>*:nth-child(4){animation-delay:.12s}
+.stagger>*:nth-child(5){animation-delay:.16s}.stagger>*:nth-child(6){animation-delay:.2s}.stagger>*:nth-child(7){animation-delay:.24s}
+.stagger>*:nth-child(n+8){animation-delay:.28s}
+.grid3 .tile{animation:pop .4s both}
+.grid3 .tile:nth-child(1){animation-delay:.1s}.grid3 .tile:nth-child(2){animation-delay:.14s}.grid3 .tile:nth-child(3){animation-delay:.18s}
+.grid3 .tile:nth-child(4){animation-delay:.22s}.grid3 .tile:nth-child(5){animation-delay:.26s}.grid3 .tile:nth-child(6){animation-delay:.3s}
+
+/* result reveal */
+.banner{animation:pop .45s cubic-bezier(.2,.8,.2,1) both}
+.banner.red>div:first-child svg{animation:nudge .5s .45s ease-in-out}
+.conf i{animation:grow 1s .25s cubic-bezier(.2,.8,.2,1) both}
+.find{animation:rise .38s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms + .3s)}
+.next{animation:rise .4s .5s both}
+.prog{animation:rise .3s both}
+.toast{animation:toastIn .25s cubic-bezier(.2,.8,.2,1) both}
+
+/* splash + success moments */
+.logo-anim{animation:pop .6s cubic-bezier(.2,.8,.2,1) both}
+.logo-anim .tick{stroke-dasharray:80;animation:draw .55s .35s ease-out both}
+.logo-anim .badge{animation:pop .4s .7s both;transform-origin:108px 112px}
+.bigico{animation:pop .5s both}.bigico svg{animation:floaty 2.6s 1s ease-in-out infinite}
+.successico{animation:pop .5s both}
+.successico svg path{stroke-dasharray:40;animation:draw .5s .25s ease-out both}
+
+/* language dropdown */
+.langsel{position:relative;display:inline-flex;align-items:center;gap:6px;background:var(--lav2);border-radius:20px;padding:0 10px;height:36px}
+.langsel select{appearance:none;-webkit-appearance:none;border:0;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--p);padding:0 2px;cursor:pointer;outline:none}
+.langsel:focus-within{box-shadow:0 0 0 2px var(--p2)}
+
+/* installed app: respect phone notches and the home bar */
+@media (display-mode: standalone){.app{padding-top:env(safe-area-inset-top)}.nav{height:calc(78px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}}
+
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.installcard{margin-top:14px;background:#fff;border-radius:20px;padding:14px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow)}

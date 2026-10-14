@@ -7,7 +7,7 @@ export default function ReportSuccess({ lastReport, tab, mode }) {
   const { t } = useT()
   return (
     <div className="sc" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 36 }}>
-      <div style={{ width: 76, height: 76, borderRadius: 38, background: '#DDF1E4', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name="chk" size={34} color="#1E7A4A" /></div>
+      <div className="successico" style={{ width: 76, height: 76, borderRadius: 38, background: '#DDF1E4', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name="chk" size={34} color="#1E7A4A" /></div>
       <div style={{ fontSize: 24, fontWeight: 600, textAlign: 'center', lineHeight: 1.3, marginTop: 22 }}>{t('rs.thanks')}</div>
       <div className="t" style={{ fontSize: 13.5, textAlign: 'center', marginTop: 12, lineHeight: 1.6 }}>{t('rs.received')}<br />{t('rs.ref', { ref: lastReport?.ref || '—' })}</div>
       <div className="card pad" style={{ width: '100%', marginTop: 22 }}>

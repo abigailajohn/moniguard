@@ -1,6 +1,6 @@
 # Real-world test pack
 
-Twelve messages to paste into **Verify → Paste text**. The scams follow patterns from official Mauritian warnings (source under each). The notices describe the scams but mostly don't publish the full text, so the wording is reconstructed. Three are normal messages that should **not** be flagged.
+Messages to paste into **Verify → Paste text**. The scams follow patterns from official Mauritian warnings and common French-language SMS scams (source under each). Official notices describe the scams but rarely publish the full text, so the wording is reconstructed. The last three are normal messages that should **not** be flagged.
 
 Run them all at once with `npm test`.
 
@@ -94,7 +94,34 @@ From: compta@pltraders-mu.com
 Bonzour, nou finn sanz nou kont labank. Pey fakir Rs 42,000 zordi mem lor nouvo kont 000123987654. Si ou pa pey, nou pou aret livrezon.
 ```
 
-## 10. legit-mra
+## 10. fr-bill-cutoff
+
+**Expected:** suspicious or high  
+**Pattern from:** Common French-language SMS theme (unpaid electricity bill, "coupure imminente"), listed by iarnaque.fr for 2026; adapted to Mauritius.
+
+```
+CEB: Votre facture d'électricité est impayée. Régularisez sous 24h pour éviter une coupure imminente : http://ceb-paiement.info/regler
+```
+
+## 11. fr-parcel-fee
+
+**Expected:** suspicious or high  
+**Pattern from:** Common French-language SMS theme (parcel blocked, small customs or re-delivery fee), iarnaque.fr 2026; matches the Mauritius Post warning.
+
+```
+Mauritius Post : votre colis est en attente. Payez les frais de dédouanement de Rs 95 ici : https://mupost-livraison.com
+```
+
+## 12. fr-tax-refund
+
+**Expected:** high  
+**Pattern from:** Common French-language SMS theme (tax refund available, enter bank details), iarnaque.fr 2026; matches the MRA refund warning.
+
+```
+MRA : Un remboursement d'impôt de Rs 8 300 est disponible. Saisissez vos coordonnées bancaires sur http://mra-remboursement.com avant vendredi.
+```
+
+## 13. legit-mra
 
 **Expected:** safe or inconclusive  
 **Pattern from:** Control: genuine-style reminder linking only to the official site.
@@ -103,7 +130,7 @@ Bonzour, nou finn sanz nou kont labank. Pey fakir Rs 42,000 zordi mem lor nouvo 
 Reminder: the deadline for filing your income tax return is approaching. File online at https://www.mra.mu
 ```
 
-## 11. legit-supplier
+## 14. legit-supplier
 
 **Expected:** safe  
 **Pattern from:** Control: invoice from a saved supplier, normal wording.
@@ -113,7 +140,7 @@ From: accounts@pltraders.mu
 Invoice 2231 for Rs 18,000, October print order. Payment to our usual MCB account within 30 days. Thank you.
 ```
 
-## 12. legit-meeting
+## 15. legit-meeting
 
 **Expected:** inconclusive  
 **Pattern from:** Control: ordinary message.
@@ -128,8 +155,8 @@ Bonjour, est-ce que la livraison de jeudi est toujours prévue pour 10h ? Merci.
 - Bank of Mauritius notices: https://www.bom.mu (Financial education menu)
 - MauBank communiqués: https://www.maubank.mu
 - Mauritius Post communiqués: https://www.mauritiuspost.mu/communique
-- Scam screenshots people post on Facebook groups or WhatsApp: use **Upload file** (needs the AI key).
+- Real scam texts on your own phone, or ones friends and colleagues have received (remove personal details). Screenshots work via **Upload file** (needs the AI key).
 
-When you test a real one, note the result. If MoniGuard gets it wrong, send me the text (remove personal details) and I'll add a rule and a test for it.
+If MoniGuard gets one wrong, send the text and it can become a new rule and a new test.
 
-MoniGuard checks whether a message is trying to get **money or details** from you. It doesn't judge whether a news story is true (fake news), so test it with scam messages, not news articles.
+MoniGuard checks whether a message is trying to get **money or details**. It does not judge whether a news story is true.

@@ -54,16 +54,22 @@ Users can download all their data, delete their history, or delete the whole acc
 
 - **Trusted records.** Save a real supplier once. Next time, an invoice from `portlouis-traders.net` instead of the saved `pltraders.mu` is flagged as a look-alike, even if the wording is perfectly normal. Invoice fraud usually works exactly like that.
 - **Your own domain.** Scammers copy a company's own address to ask staff to pay. MoniGuard flags addresses that imitate the user's business email domain.
+- **Your main bank.** Bank scam texts are sent to thousands of people at once, so many receivers don't even bank there. If a message talks about "your SBM account" and the user's main bank is MCB, that's flagged. This is why set-up asks for the main bank.
 
 It also stays honest about limits:
 - A sender address on an official domain is **not** treated as proof, because sender addresses can be forged. The MRA has warned about phishing sent "from" `@mra.mu`.
 - Every result lists what was not verified.
 
-## 5. Languages
+## 5. Feels like an app
+
+- **Installable:** on Android (Chrome) the app offers "Install". On iPhone it's Share → Add to Home Screen. It then has its own icon and opens full screen, with no browser bar. A small service worker keeps the app shell available on a weak connection; checks and account data always go to the network.
+- **Motion:** screens slide forward and back, buttons respond to taps, and results reveal step by step (banner, confidence count-up, findings one by one). Phones vibrate briefly on a high-risk result where supported. All motion is switched off for people who turn on "reduce motion".
+
+## 6. Languages
 
 The interface, results, alerts and examples are in English, French and Kreol Morisien. The scam-pattern rules understand all three. Claude writes its notes in the user's chosen language.
 
-## 6. Security and privacy measures
+## 7. Security and privacy measures
 
 - The Anthropic API key exists only on the server. The browser only has the public Supabase key.
 - **Row level security** in the database: every row belongs to one user, and the database itself refuses to show it to anyone else.
@@ -71,7 +77,7 @@ The interface, results, alerts and examples are in English, French and Kreol Mor
 - Input limits: 5,000 characters of text; files up to 3 MB, restricted to images, PDF and text.
 - Untrusted content is kept separate from instructions in the AI prompt.
 
-## 7. How it's built
+## 8. How it's built
 
 - **Front end:** React (Vite), a mobile-first web app that works in any phone or laptop browser.
 - **Server:** Node.js (Express), hosted on Render. It runs the checks and talks to Claude.
@@ -79,7 +85,7 @@ The interface, results, alerts and examples are in English, French and Kreol Mor
 - **AI:** Anthropic Claude API (`claude-sonnet-5-5` by default), about $0.01 per check.
 - **Tests:** `npm test` runs the rule-engine tests and a real-world pack of 12 messages based on official Mauritian scam warnings (`docs/test-pack.md`).
 
-## 8. Honest limits and next steps
+## 9. Honest limits and next steps
 
 - **Email:** the free Supabase email only sends to team members. A real launch needs an email service such as Resend.
 - **Live checks:** no live blocklists or company-registry lookups yet. Every result says so.

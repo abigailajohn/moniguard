@@ -3,6 +3,7 @@ import { labels } from '../labels.js'
 import { ALERTS } from '../alerts.js'
 import { pick, useT } from '../i18n.js'
 import { kindIcon, needsFollowUp, when, who } from '../store.js'
+import InstallCard from './InstallCard.jsx'
 
 const TILES = [['chat', 'message', 'text'], ['mail', 'email', 'text'], ['link', 'link', 'link'], ['doc', 'invoice', 'file'], ['img', 'screenshot', 'file'], ['qr', 'qr', 'qr']]
 
@@ -21,7 +22,7 @@ export default function Home({ state, go, tab, setCurrent, setPending, setAlertI
   const flagged = state.history.filter((h) => ['high', 'suspicious'].includes(h.result.label)).length
 
   return (
-    <div className="sc">
+    <div className="sc stagger">
       <div className="top">
         <div style={{ minWidth: 0 }}>
           <div style={{ fontSize: 18, fontWeight: 600 }}>{t('home.hi', { name: me.first })}</div>
@@ -59,6 +60,8 @@ export default function Home({ state, go, tab, setCurrent, setPending, setAlertI
           <Icon name="ch" size={18} color="#8A84A3" />
         </button>
       )}
+
+      <InstallCard compact />
 
       <div className="sec"><b>{t('home.recent')}</b>{checked > 0 && <span className="t">{t('home.stats', { a: checked, b: flagged })}</span>}</div>
       {state.history.length ? (
