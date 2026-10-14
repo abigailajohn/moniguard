@@ -2,21 +2,29 @@ import { useState } from 'react'
 import Icon from '../icons.jsx'
 import { useT } from '../i18n.js'
 import { uid } from '../store.js'
+import { supabase } from '../supabase.js'
 
 const TYPES = ['invoice', 'bank', 'offer', 'link', 'other']
 const guess = (r) => (!r ? 'invoice' : r.kind === 'invoice' ? 'invoice' : r.kind === 'offer' ? 'offer' : r.kind === 'link' || r.kind === 'qr' ? 'link' : r.claimedOrg ? 'bank' : 'other')
 
-export default function Report({ current, setState, setLastReport, replace, user }) {
+export default function Report({ current, setState, setLastReport, replace, user, mode }) {
   const { t } = useT()
   const r = current?.result
   const [type, setType] = useState(guess(r))
   const [what, setWhat] = useState(current ? current.input.replace(/\s+/g, ' ').slice(0, 240) : '')
   const [attach, setAttach] = useState(!!r)
   const [contact, setContact] = useState(user?.email || '')
+  const [busy, setBusy] = useState(false)
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault()
+    if (busy) return
+    setBusy(true)
+    const t0 = Date.now()
     const rep = { id: uid(), ref: `MG-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`, ts: new Date().toISOString(), type, what, result: attach && r ? { label: r.label, subtitle: r.subtitle } : null, contact }
+    // Signed in: save the report to the account before confirming. Guests: kept on the device.
+    if (mode === 'user' && supabase) await supabase.from('reports').upsert({ id: rep.id, data: rep, created_at: rep.ts }, { onConflict: 'user_id,id' }).then(() => {}, () => {})
+    await new Promise((ok) => setTimeout(ok, Math.max(0, 1100 - (Date.now() - t0))))
     setState((s) => ({ ...s, reports: [rep, ...s.reports] }))
     setLastReport(rep)
     replace('reportSuccess')
@@ -37,7 +45,7 @@ export default function Report({ current, setState, setLastReport, replace, user
       <label className="fl" htmlFor="contact">{t('rep.contact')}</label>
       <input id="contact" className="inp" value={contact} onChange={(e) => setContact(e.target.value)} placeholder={t('rep.contactPh')} maxLength={120} />
       <div className="t" style={{ marginTop: 12, lineHeight: 1.5 }}>{t('rep.note')}</div>
-      <button className="btn pri" type="submit" style={{ marginTop: 16 }}>{t('rep.submit')} <Icon name="ar" size={20} color="#fff" /></button>
+      <button className="btn pri" type="submit" style={{ marginTop: 16 }} disabled={busy}>{busy ? <><span className="spin" aria-hidden="true" /> {t('rep.sending')}</> : <>{t('rep.submit')} <Icon name="ar" size={20} color="#fff" /></>}</button>
     </form>
   )
 }

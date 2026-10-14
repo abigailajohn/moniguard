@@ -52,7 +52,7 @@ h1{font-size:30px;font-weight:600;margin:0;letter-spacing:-.4px;line-height:1.2}
 .tabs{background:var(--lav2);border-radius:30px;padding:5px;display:flex;gap:2px;margin-top:18px}
 .tabs button{flex:1 1 auto;border:0;background:none;border-radius:20px;padding:9px 8px;font-size:11px;font-weight:500;color:var(--grey);white-space:nowrap}
 .tabs button.on{background:#fff;color:var(--p);font-weight:600;box-shadow:0 1px 4px rgba(60,40,120,.15)}
-.ta{width:100%;margin-top:14px;background:#fff;border:1.5px solid transparent;border-radius:22px;height:160px;padding:16px 18px 40px;font:inherit;font-size:14px;resize:none;box-shadow:var(--shadow);color:var(--ink);outline:none;display:block}
+.ta{width:100%;margin-top:14px;background:#fff;border:1.5px solid transparent;border-radius:22px;height:160px;padding:16px 52px 16px 18px;font:inherit;font-size:14px;resize:none;box-shadow:var(--shadow);color:var(--ink);outline:none;display:block}
 .ta:focus{border-color:var(--p2)}
 .ta::placeholder{color:#8A84A3}
 .taw{position:relative}
@@ -150,11 +150,11 @@ h1{font-size:30px;font-weight:600;margin:0;letter-spacing:-.4px;line-height:1.2}
 .hdr b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .authsc>*{flex-shrink:0}
 /* --- motion (app feel). Everything here is switched off for "reduce motion" users --- */
-.screen{flex:1;display:flex;flex-direction:column;min-height:0;animation:.3s cubic-bezier(.2,.8,.2,1) both}
+.screen{flex:1;display:flex;flex-direction:column;min-height:0;animation:.32s cubic-bezier(.25,.8,.25,1) both}
 .screen.fwd{animation-name:inRight}.screen.back{animation-name:inLeft}.screen.fade{animation-name:fadeUp;animation-duration:.22s}
-@keyframes inRight{from{transform:translateX(32px);opacity:0}to{transform:none;opacity:1}}
-@keyframes inLeft{from{transform:translateX(-32px);opacity:0}to{transform:none;opacity:1}}
-@keyframes fadeUp{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes inRight{from{transform:translateX(18px);opacity:0}to{transform:none;opacity:1}}
+@keyframes inLeft{from{transform:translateX(-18px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadeUp{from{transform:translateY(4px);opacity:0}to{transform:none;opacity:1}}
 @keyframes rise{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
 @keyframes pop{0%{transform:scale(.94);opacity:0}60%{transform:scale(1.015);opacity:1}100%{transform:none}}
 @keyframes grow{from{width:0}}
@@ -170,21 +170,12 @@ h1{font-size:30px;font-weight:600;margin:0;letter-spacing:-.4px;line-height:1.2}
 .nav button .pillbg{transition:background-color .25s,transform .15s}.nav button:active .pillbg{transform:scale(.9)}
 .iconbtn{transition:background-color .15s,transform .12s}.iconbtn:active{transform:scale(.92);background:var(--lav)}
 
-/* home: content arrives in a gentle cascade */
-.stagger>*{animation:rise .42s cubic-bezier(.2,.8,.2,1) both}
-.stagger>*:nth-child(2){animation-delay:.04s}.stagger>*:nth-child(3){animation-delay:.08s}.stagger>*:nth-child(4){animation-delay:.12s}
-.stagger>*:nth-child(5){animation-delay:.16s}.stagger>*:nth-child(6){animation-delay:.2s}.stagger>*:nth-child(7){animation-delay:.24s}
-.stagger>*:nth-child(n+8){animation-delay:.28s}
-.grid3 .tile{animation:pop .4s both}
-.grid3 .tile:nth-child(1){animation-delay:.1s}.grid3 .tile:nth-child(2){animation-delay:.14s}.grid3 .tile:nth-child(3){animation-delay:.18s}
-.grid3 .tile:nth-child(4){animation-delay:.22s}.grid3 .tile:nth-child(5){animation-delay:.26s}.grid3 .tile:nth-child(6){animation-delay:.3s}
-
 /* result reveal */
-.banner{animation:pop .45s cubic-bezier(.2,.8,.2,1) both}
+.banner{animation:pop .55s cubic-bezier(.2,.8,.2,1) both}
 .banner.red>div:first-child svg{animation:nudge .5s .45s ease-in-out}
-.conf i{animation:grow 1s .25s cubic-bezier(.2,.8,.2,1) both}
-.find{animation:rise .38s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms + .3s)}
-.next{animation:rise .4s .5s both}
+.conf i{animation:grow 1.2s .35s cubic-bezier(.2,.8,.2,1) both}
+.find{animation:rise .38s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 120ms + .55s)}
+.next{animation:rise .45s .9s both}
 .prog{animation:rise .3s both}
 .toast{animation:toastIn .25s cubic-bezier(.2,.8,.2,1) both}
 
@@ -208,3 +199,5 @@ h1{font-size:30px;font-weight:600;margin:0;letter-spacing:-.4px;line-height:1.2}
 .installcard{margin-top:14px;background:#fff;border-radius:20px;padding:14px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow)}
 .guestbar{margin-top:14px;display:flex;align-items:center;gap:12px;background:var(--abg);color:#5A4200;border-radius:14px;padding:10px 14px;font-size:12px;font-weight:500}
 .guestbar .link{font-size:12.5px;font-weight:600;white-space:nowrap}
+.spin{width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}

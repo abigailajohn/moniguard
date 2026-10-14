@@ -4,6 +4,7 @@ import { ALERTS } from '../alerts.js'
 import { pick, useT } from '../i18n.js'
 import { kindIcon, needsFollowUp, when, who } from '../store.js'
 import InstallCard from './InstallCard.jsx'
+import CheckRow from './CheckRow.jsx'
 
 const TILES = [['chat', 'message', 'text'], ['mail', 'email', 'text'], ['link', 'link', 'link'], ['doc', 'invoice', 'file'], ['img', 'screenshot', 'file'], ['qr', 'qr', 'qr']]
 
@@ -22,7 +23,7 @@ export default function Home({ state, go, tab, setCurrent, setPending, setAlertI
   const flagged = state.history.filter((h) => ['high', 'suspicious'].includes(h.result.label)).length
 
   return (
-    <div className="sc stagger">
+    <div className="sc">
       <div className="top">
         <div style={{ minWidth: 0 }}>
           <div style={{ fontSize: 18, fontWeight: 600 }}>{t('home.hi', { name: me.first })}</div>
@@ -70,22 +71,10 @@ export default function Home({ state, go, tab, setCurrent, setPending, setAlertI
 
       <InstallCard compact />
 
-      <div className="sec"><b>{t('home.recent')}</b>{checked > 0 && <span className="t">{t('home.stats', { a: checked, b: flagged })}</span>}</div>
+      <div className="sec"><b>{t('home.recent')}</b>{checked > 3 && <button className="link" style={{ fontWeight: 600 }} onClick={() => go('history')}>{t('home.seeAll')}</button>}</div>
       {state.history.length ? (
         <div className="card" style={{ marginTop: 12, padding: '2px 16px' }}>
-          {state.history.slice(0, 5).map((h) => (
-            <button key={h.id} className="row" onClick={() => open(h)}>
-              <span className="ico" style={{ width: 44, height: 44 }}><Icon name={kindIcon(h.source?.type === 'file' && h.source.kind === 'image' ? 'image' : h.result.kind)} size={22} color="var(--p)" /></span>
-              <span className="flex1">
-                <div className="ttl" style={{ fontSize: 13.5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{h.title}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4, gap: 8 }}>
-                  <span className={`pill ${L[h.result.label].tone}`}><i />{L[h.result.label].chip}</span>
-                  <span className="t" style={{ fontSize: 11 }}>{when(h.ts, t, lang)}</span>
-                </div>
-              </span>
-              <Icon name="ch" size={18} color="#8A84A3" />
-            </button>
-          ))}
+          {state.history.slice(0, 3).map((h) => <CheckRow key={h.id} h={h} onClick={() => open(h)} />)}
         </div>
       ) : (
         <div className="card empty" style={{ marginTop: 12 }}>{t('home.empty1')}<br />{t('home.empty2')}<br /><button className="link" style={{ marginTop: 8 }} onClick={() => tab('verify')}>{t('home.checkSomething')}</button></div>

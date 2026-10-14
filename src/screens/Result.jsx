@@ -7,12 +7,12 @@ import { uid, when } from '../store.js'
 const FICON = { risk: ['exc', 'var(--red)'], ok: ['cc', '#1E7A4A'], info: ['help', 'var(--mut)'] }
 
 // Counts a number up from 0, for the confidence figure.
-function useCountUp(target, ms = 900) {
+function useCountUp(target, ms = 1200) {
   const [n, setN] = useState(0)
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setN(target); return }
     let raf
-    const t0 = performance.now() + 250
+    const t0 = performance.now() + 350
     const step = (now) => {
       const p = Math.min(1, Math.max(0, (now - t0) / ms))
       setN(Math.round(target * (1 - Math.pow(1 - p, 3))))

@@ -17,6 +17,7 @@ import Alerts from './screens/Alerts.jsx'
 import AlertDetail from './screens/AlertDetail.jsx'
 import Profile from './screens/Profile.jsx'
 import Privacy from './screens/Privacy.jsx'
+import History from './screens/History.jsx'
 import Welcome from './screens/auth/Welcome.jsx'
 import SignUp from './screens/auth/SignUp.jsx'
 import CheckEmail from './screens/auth/CheckEmail.jsx'
@@ -26,10 +27,10 @@ import ResetPassword from './screens/auth/ResetPassword.jsx'
 import Onboarding from './screens/auth/Onboarding.jsx'
 
 const TABS = [['home', 'home'], ['verify', 'verify'], ['report', 'flag'], ['learn', 'learn'], ['settings', 'set']]
-const ACTIVE = { home: 'home', alerts: 'home', alert: 'home', verify: 'verify', result: 'verify', report: 'report', learn: 'learn', settings: 'settings', records: 'settings', profile: 'settings', privacy: 'settings' }
+const ACTIVE = { home: 'home', alerts: 'home', alert: 'home', history: 'home', verify: 'verify', result: 'verify', report: 'report', learn: 'learn', settings: 'settings', records: 'settings', profile: 'settings', privacy: 'settings' }
 const SCREENS = {
   splash: Splash, home: Home, verify: Verify, result: Result, report: Report, reportSuccess: ReportSuccess, settings: Settings, records: Records, learn: Learn,
-  alerts: Alerts, alert: AlertDetail, profile: Profile, privacy: Privacy,
+  alerts: Alerts, alert: AlertDetail, profile: Profile, privacy: Privacy, history: History,
   welcome: Welcome, signup: SignUp, checkEmail: CheckEmail, login: Login, forgot: Forgot, resetPassword: ResetPassword, onboarding: Onboarding,
 }
 const AUTH_SCREENS = ['welcome', 'signup', 'checkEmail', 'login', 'forgot']
@@ -99,7 +100,7 @@ export default function App() {
 
   useEffect(() => {
     let alive = true
-    const minSplash = new Promise((ok) => setTimeout(ok, 1300))
+    const minSplash = new Promise((ok) => setTimeout(ok, 2500)) // long enough to see the logo
     ;(async () => {
       if (!cloud) { await minSplash; if (alive) enterGuest(); return }
       const { data } = await supabase.auth.getSession()
@@ -168,7 +169,8 @@ export default function App() {
   }
 
   let screen = stack[stack.length - 1]
-  if (mode === 'boot' || mode === 'loading') screen = 'splash'
+  const booting = mode === 'boot' || (mode === 'loading' && stack[stack.length - 1] === 'splash')
+  if (booting) screen = 'splash'
   const needsState = !AUTH_SCREENS.includes(screen) && !['splash', 'resetPassword'].includes(screen)
   const Screen = SCREENS[screen]
   const active = ACTIVE[screen]
@@ -183,6 +185,8 @@ export default function App() {
             <button className="btn pri" style={{ marginTop: 12 }} onClick={() => user && enterUser(user)}>{t('continue')}</button>
             <button className="btn out" style={{ marginTop: 10 }} onClick={actions.logout}>{t('s.logout')}</button>
           </div>
+        ) : mode === 'loading' && !booting ? (
+          <div className="sc center" role="status"><div className="dots" aria-hidden="true"><i /><i /><i /></div><div className="t" style={{ marginTop: 14 }}>{t('loading')}</div></div>
         ) : needsState && !state ? null : (
           <div className={`screen ${dir.current}`} key={stack.length + screen}>
             <Screen {...ctx} loading={mode === 'loading'} />

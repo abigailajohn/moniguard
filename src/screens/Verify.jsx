@@ -120,10 +120,12 @@ export default function Verify({ state, setState, setCurrent, go, pending, setPe
     if (!input) { setError(prompt); return }
     setError(''); setBusy(true); setStep(0)
     const t0 = Date.now()
-    const timers = [400, 800, 1200].map((ms, i) => setTimeout(() => setStep(i + 1), ms))
+    const timers = [550, 1100, 1650].map((ms, i) => setTimeout(() => setStep(i + 1), ms))
     try {
       const r = await analyse(input, { trusted: state.records, profile: { ...state.profile, domain: who(state.profile).domain }, lang })
-      await new Promise((ok) => setTimeout(ok, Math.max(0, 1500 - (Date.now() - t0))))
+      await new Promise((ok) => setTimeout(ok, Math.max(0, 2200 - (Date.now() - t0))))
+      setStep(4) // all four steps ticked
+      await new Promise((ok) => setTimeout(ok, 450))
       const readText = r.extractedText || input.text
       const source = tab === 'file' ? { type: 'file', name: upload.name, kind: upload.kind, thumb: upload.thumb || null } : { type: tab }
       const title = tab === 'file' && !readText.trim() ? upload.name : titleFor(r, readText, t)
@@ -156,10 +158,11 @@ export default function Verify({ state, setState, setCurrent, go, pending, setPe
       {tab === 'text' && (
         <div className="taw">
           <textarea className="ta" value={text} onChange={(e) => setText(e.target.value)} placeholder={t('v.textPh')} aria-label={t('v.tab.text')} disabled={busy} maxLength={5000} />
-          <span className="t meta">{t('v.textMeta')}</span>
           <button className="iconbtn paste" aria-label={t('v.paste')} onClick={paste} disabled={busy}><Icon name="clipb" size={24} color="var(--p)" /></button>
         </div>
       )}
+
+      {tab === 'text' && <div className="t" style={{ marginTop: 8 }}>{t('v.textMeta')}</div>}
 
       {tab === 'link' && (
         <div style={{ marginTop: 14 }}>
@@ -244,7 +247,7 @@ export default function Verify({ state, setState, setCurrent, go, pending, setPe
             <Icon name="spark" size={26} color="var(--p)" />
             <div><div style={{ fontSize: 14.5, fontWeight: 600 }}>{tab === 'file' && upload?.kind !== 'text' ? t('v.busyFile') : t('v.busy')}</div><div className="t">{t('v.busySub')}</div></div>
           </div>
-          <div className="bar"><i style={{ width: `${(step + 1) * 25}%` }} /></div>
+          <div className="bar"><i style={{ width: `${Math.min(100, (step + 1) * 25)}%` }} /></div>
           <div className="steps">
             {STEPS.map((s, i) => (
               <div key={s} className={`step ${i < step ? 'done' : i === step ? 'now' : ''}`}>
